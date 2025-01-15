@@ -17,6 +17,7 @@ class Duck {
     audioContext = null;
     dummyAudioSource = null;
     micSource = null;
+    micStream = null;
 
     isModeSet() {
         return this.mode != null;
@@ -106,38 +107,36 @@ class Duck {
             return false;
         }
         
-        // マイク(オタマトーン)の接続。初回の場合はユーザの接続許可が必要
-        if (!this.micSource) {
-            try {
-                // まず、任意のマイクを接続し、ユーザからの包括的なマイク使用許可を取得する (使用許可がないとiOSではenumerateDevices()がまともな答えを返さない)
-                let stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+        // マイク(オタマトーン)の接続。初回の場合はユーザの接続許可が必要。
+        try {
+            // まず、任意のマイクを接続し、ユーザからの包括的なマイク使用許可を取得する (使用許可がないとiOSではenumerateDevices()がまともな答えを返さない)
+            this.micStream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
 
-                // マイクの一覧を取得し、その中からオタマトーンである可能性が高いマイクを選ぶ
-                const micCandidateLabels = ["外部マイク", "ヘッドセットマイク", "Microphone Input", "Headset Microphone"];
-                let micFound = null;
-                let micDevices = [];
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                for (const device of devices) {
-                    if (device.kind == "audioinput") {
-                        micDevices.push(device.label);
-                        if (!micFound && micCandidateLabels.includes(device.label)) {
-                            // オタマトーンの可能性が高いマイクを接続する
-                            stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: device.deviceId, autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
-                            micFound = device.label;
-                        }
+            // マイクの一覧を取得し、その中からオタマトーンである可能性が高いマイクを選ぶ
+            const micCandidateLabels = ["外部マイク", "ヘッドセットマイク", "Microphone Input", "Headset Microphone"];
+            let micFound = null;
+            let micDevices = [];
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            for (const device of devices) {
+                if (device.kind == "audioinput") {
+                    micDevices.push(device.label);
+                    if (!micFound && micCandidateLabels.includes(device.label)) {
+                        // オタマトーンの可能性が高いマイクを接続する
+                        this.micStream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: device.deviceId, autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+                        micFound = device.label;
                     }
                 }
-                if (micDevices.length == 0) {
-                    View.log("音声入力デバイスが見つかりません。", true);
-                    return false;
-                }
-                // ログ出力
-                View.log("検知できた音声入力デバイス[" + micDevices.join(", ") + "]から\"" + (micFound ? micFound : micDevices[0]) + "\"を採用。オタマトーンを接続しているのに使用できない場合、このログを作者に教えてください。", true);
-                this.micSource = this.audioContext.createMediaStreamSource(stream);
-            } catch (e) {
-                this.mode = Mode.SLIDER;
+            }
+            if (micDevices.length == 0) {
+                View.log("音声入力デバイスが見つかりません。", true);
                 return false;
             }
+            // ログ出力
+            View.log("検知できた音声入力デバイス[" + micDevices.join(", ") + "]から\"" + (micFound ? micFound : micDevices[0]) + "\"を採用。オタマトーンを接続しているのに使用できない場合、このログを作者に教えてください。", true);
+            this.micSource = this.audioContext.createMediaStreamSource(this.micStream);
+        } catch (e) {
+            this.mode = Mode.SLIDER;
+            return false;
         }
 
         // モードの切り替え
@@ -168,6 +167,9 @@ class Duck {
         // マイク(オタマトーン)の切り離し
         if (this.micSource) {
             this.micSource.disconnect(this.workletNode);
+            this.micStream.getTracks().forEach(track => track.stop());
+            this.micStream = null;
+            this.micSource = null;
         }
         // ダミー音源は毎回つくる
         this.dummyAudioSource = this.audioContext.createBufferSource();

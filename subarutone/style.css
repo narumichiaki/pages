@@ -142,10 +142,10 @@ h1 {
   content: '周波数： ';
 }
 
-#description {
+.description {
   margin-top: 1em;
 }
-#description, .attention {
+.description, .attention {
   text-align: justify;
 }
 .attention::before {
