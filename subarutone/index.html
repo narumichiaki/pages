@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <script src="./subarutone.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>スバルトーン</title>
+</head>
+<body>
+    <div id="container">
+        <div id="left-panel">
+            <div id="slider-container">
+                <div id="slider">
+                    <div id="slider-bar"></div>
+                    <div id="overlay">就寝中</div>
+                </div>
+            </div>
+        </div>
+        <div id="right-panel">
+            <h1>スバルトーン (オタマトーン対応)</h1>
+            <div class="mode-switch-container isnotready" id="easy-mode-container">
+                <label for="check">　　かんたんモード</label>
+                <div class="mode-switch isnotready" id="easy-mode"><input type="checkbox" name="check" /></div>
+            </div>
+            <div class="mode-switch-container isnotready" id="otamatone-mode-container">
+                <label for="check">オタマトーンモード</label>
+                <div class="mode-switch isnotready" id="otamatone-mode"><input type="checkbox" name="check" /></div>
+            </div>
+            <p id="frequency">0 Hz</p>
+            <p id="description"><a href="https://www.amazon.co.jp//dp/B07W62Z7M2/" target="_blank" title="Amazon (非アフィリエイトリンク)">オタマトーンneo/techno</a>を付属ケーブルで接続し、マイクの利用を許可することで、オタマトーンの口からスバルの声を出してワウ奏法をすることができます。</p>
+            <p class="attention">オタマトーンモードは、<strong>オタマトーンneo/technoでしか利用できず</strong>、かつ、ステレオミニ四極端子が<strong>CTIA規格に対応している機器</strong>(Apple製品等)との組み合わせでしか利用できません。iPhoneでは<strong>四極対応</strong>変換ケーブルが必要です。</p>
+            <ul id="acknowledgement">
+                <li>音源： 大空スバルさま <a href="https://www.youtube.com/live/3LA6t9YHsKw">YouTube</a></li>
+                <li>発想： くゆみき進さま <a href="https://www.youtube.com/watch?v=1eFY9CDFBkw">YouTube</a></li>
+                <li>オタマトーン： 明和電機さま・株式会社キューブさま <a href="https://otamatone.jp">公式</a></li>
+                <li>歌声合成ライブラリ： 森勢将雅さま <a href="http://www.isc.meiji.ac.jp/~mmorise/world/index.html">WORLD</a></li>
+                <li>作成： narumichiaki <a href="https://x.com/narumichiaki">X</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // スバルを起こす
+        duck = Subaru.wakeUp();
+
+        // HTMLがすべてロードされ、スバルの準備が完了したらユーザが使えるようにする。
+        let isDomLoaded = false;
+        let isSubaruReady = false;
+        function prepare() {
+            if (isDomLoaded && isSubaruReady) {
+                View.setEventListeners(duck);
+                View.getReadyOverlay();
+            }
+        }
+        // HTMLのロード完了を監視
+        document.addEventListener('DOMContentLoaded', () => {
+            isDomLoaded = true;
+            prepare();
+        });
+        // スバルの準備完了を監視
+        document.addEventListener('EngineReady', () => {
+            isSubaruReady = true;
+            prepare();
+        });
+    </script>
+</body>
+</html>

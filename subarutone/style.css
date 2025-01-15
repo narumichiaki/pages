@@ -1,0 +1,225 @@
+body, div, h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+body {
+  background-image: repeating-linear-gradient(90deg, rgba(235, 238, 175, 1) 0 10px, rgba(243, 245, 210, 1) 10px 20px);
+  font-family:sans-serif;
+}
+
+#container {
+  margin: 0 auto;
+  width: 600px;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#left-panel {
+  width: 120px;
+  align-items: center;
+}
+#right-panel {
+  width: 480px;
+  justify-content: center;
+}
+
+
+#slider-container {
+  width: 40px;
+  height: 640px;
+  border-radius: 28px;
+  border: 8px solid #077186;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+#slider {
+  position: relative;
+  width: 40px;
+  height: 640px;
+  border-radius: 20px;
+  background-image: linear-gradient(to bottom,
+    #eaeaea 0% 1.19%, 
+    #d0dc2c 1.19% 3.83%, 
+    #eaeaea 3.83% 6.47%, 
+    #d0dc2c 6.47% 9.11%, 
+    #eaeaea 9.11% 11.75%, 
+    #d0dc2c 11.75% 14.39%, 
+    #eaeaea 14.39% 17.03%, 
+    #d0dc2c 17.03% 19.67%, 
+    #eaeaea 19.67% 22.31%, 
+    #4abdcc 22.31% 24.95%, 
+    #eaeaea 24.95% 27.59%, 
+    #d0dc2c 27.59% 30.23%, 
+    #eaeaea 30.23% 32.87%, 
+    #d0dc2c 32.87% 35.51%, 
+    #eaeaea 35.51% 38.15%, 
+    #d0dc2c 38.15% 40.79%, 
+    #eaeaea 40.79% 43.43%, 
+    #d0dc2c 43.43% 46.07%, 
+    #eaeaea 46.07% 48.71%, 
+    #d0dc2c 48.71% 51.35%, 
+    #eaeaea 51.35% 53.99%, 
+    #4abdcc 53.99% 56.63%, 
+    #eaeaea 56.63% 59.27%, 
+    #d0dc2c 59.27% 61.91%, 
+    #eaeaea 61.91% 64.55%, 
+    #d0dc2c 64.55% 67.19%, 
+    #eaeaea 67.19% 69.83%, 
+    #d0dc2c 69.83% 72.47%, 
+    #eaeaea 72.47% 75.11%, 
+    #d0dc2c 75.11% 77.75%, 
+    #eaeaea 77.75% 80.39%, 
+    #d0dc2c 80.39% 83.03%, 
+    #eaeaea 83.03% 85.67%, 
+    #4abdcc 85.67% 88.31%, 
+    #eaeaea 88.31% 90.95%, 
+    #d0dc2c 90.95% 93.59%, 
+    #eaeaea 93.59% 96.23%, 
+    #d0dc2c 96.23% 98.87%, 
+    #eaeaea 98.87% 100%
+  );
+}
+#slider-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #000;
+    display: none;
+}
+
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 640px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  text-align: center;
+  writing-mode: vertical-rl;
+  line-height: 40px;
+}
+
+
+h1 {
+  font-size: 1.5em;
+}
+
+#frequency::before {
+  content: '周波数： ';
+}
+
+#description {
+  margin-top: 1em;
+}
+#description, .attention {
+  text-align: justify;
+}
+.attention::before {
+  content: '※ ';
+}
+.attention {
+  margin-top: .5em;
+  margin-left: 1.3em;
+  text-indent: -1.3em;
+}
+#acknowledgement {
+  margin-top: 1em;
+  padding: .5em 0 .5em 2em;
+  border: 1px dashed #000;
+}
+
+/* 
+#attention strong {
+    color: #f00;
+} */
+.mode-switch-container {
+  margin: 1em auto;
+  border: 2px solid #c12820;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: .5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.mode-switch-container.checked {
+  border-color: #4abdcc;
+}
+.mode-switch-container label {
+  display: block;
+  margin: auto 1em auto 0;
+}
+.mode-switch-container.isnotready {
+  border-color: rgba(193, 40, 32, 0.5);
+}
+
+.mode-switch {
+  position: relative;
+  width: 78px;
+  height: 48px;
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+.mode-switch input[type=checkbox] {
+  display: none;
+}
+.mode-switch:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #c12820;
+  -webkit-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+}
+.mode-switch.isnotready:before {
+  background: rgba(193, 40, 32, 0.5);
+}
+.mode-switch:after {
+  content: "OFF";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 42px;
+  height: 42px;
+  display: block;
+  border-radius: 50px;
+  background: #fff;
+  box-shadow: 0 9px 28px -6px rgba(0, 0, 0, 0.3);
+  -webkit-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+  text-align: center;
+  padding: 14px 0 0;
+  line-height: 1;
+  font-size: 14px;
+  font-weight: bold;
+  color: #c12820;
+  letter-spacing: .5px;
+  box-sizing: border-box;
+}
+.mode-switch.isnotready:after {
+  color: rgba(193, 40, 32, 0.5);
+}
+.mode-switch.checked:before {
+  background: #4abdcc;
+}
+.mode-switch.checked:after {
+  content: "ON";
+  left: 33px;
+  box-shadow: 0 9px 28px -6px rgba(0, 0, 0, 0.5);
+  color: #4abdcc;
+  padding: 14px 0 0 1px;
+}
