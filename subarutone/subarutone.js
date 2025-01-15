@@ -113,7 +113,7 @@ class Duck {
                 let firstDeviceId = null;
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 for (const device of devices) {
-                    if (device.kind == "audioinput") {
+                    if (device instanceof InputDeviceInfo) {
                         if (!firstDeviceId) {
                             firstDeviceId = device.deviceId;
                         }
@@ -135,7 +135,7 @@ class Duck {
                 // 不具合対応用にデバイス一覧を表示
                 let output_text = "検出した入力デバイス一覧： ";
                 for (const device of devices) {
-                    if (device.kind == "audioinput") {
+                    if (device instanceof InputDeviceInfo) {
                         if (device.deviceId == deviceId) {
                             output_text += "*";
                         }
@@ -190,6 +190,7 @@ class Duck {
         this.dummyAudioSource.loop = true;
         this.dummyAudioSource.connect(this.workletNode);
         this.dummyAudioSource.start();
+        this.userTouch();
         this.workletNode.port.postMessage({ type: 'mode', mode: Mode.SLIDER });
     }
 
