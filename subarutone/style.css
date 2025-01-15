@@ -161,6 +161,9 @@ h1 {
   padding: .5em 0 .5em 2em;
   border: 1px dashed #000;
 }
+#log {
+  font-size: .5em;
+}
 
 /* 
 #attention strong {

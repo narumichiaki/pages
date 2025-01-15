@@ -95,26 +95,54 @@ class Duck {
     // オタマトーンモードに切り替える
     async switchToOtamatoneMode() {
         if (!this.isEngineReady) {
-            return;
+            return false;
         }
         // ユーザが操作しないとAudioEngineは動かないので、触る
         this.userTouch();
         // 設定済みの場合は何もしない
         if (this.mode == Mode.OTAMATONE) {
-            return;
+            return false;
         }
         
         // マイク(オタマトーン)の接続。初回の場合はユーザの接続許可が必要
         if (!this.micSource) {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false }); // 入力をそのまま受け取るために、余計な処理をしないように設定
-                this.micSource = this.audioContext.createMediaStreamSource(stream);
-                // デバッグ
+                // マイクの選択： 「外部マイク」「ヘッドセットマイク」というlabelを持つマイクを優先する。なければ、メッセージを表示しつつ、デフォルトのマイクを使用する。少なくともiPhoneの場合、外部接続のマイクが第一選択にならないため、このような対応が必要。
+                const micLabels = ["外部マイク", "ヘッドセットマイク", "Microphone Input", "Headset Microphone"];
+                let deviceId = null;
+                let firstDeviceId = null;
                 const devices = await navigator.mediaDevices.enumerateDevices();
-                let output_text = "";
                 for (const device of devices) {
-                    output_text += device.label + "<br />";
+                    if (device.kind == "audioinput") {
+                        if (!firstDeviceId) {
+                            firstDeviceId = device.deviceId;
+                        }
+                        if (!deviceId && micLabels.includes(device.label)) {
+                            deviceId = device.deviceId;
+                        }
+                    }
                 }
+                if (!firstDeviceId) {
+                    View.log("音声入力デバイスが見つかりませんでした。", true);
+                    return false;
+                }
+                if (!deviceId) {
+                    deviceId = firstDeviceId;
+                }
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: deviceId, autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+                this.micSource = this.audioContext.createMediaStreamSource(stream);
+
+                // 不具合対応用にデバイス一覧を表示
+                let output_text = "検出した入力デバイス一覧： ";
+                for (const device of devices) {
+                    if (device.kind == "audioinput") {
+                        if (device.deviceId == deviceId) {
+                            output_text += "*";
+                        }
+                        output_text += device.label + " / ";
+                    }
+                }
+                output_text += "(*)を採用 / もし、オタマトーンneo/technoを接続しているのに入力が認識されない場合、このデバイス一覧を作者に送ってください。";
                 View.log(output_text, true);
             } catch (e) {
                 this.mode = Mode.SLIDER;
