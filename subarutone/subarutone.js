@@ -107,43 +107,8 @@ class Duck {
         // マイク(オタマトーン)の接続。初回の場合はユーザの接続許可が必要
         if (!this.micSource) {
             try {
-                // マイクの選択： 「外部マイク」「ヘッドセットマイク」というlabelを持つマイクを優先する。なければ、メッセージを表示しつつ、デフォルトのマイクを使用する。少なくともiPhoneの場合、外部接続のマイクが第一選択にならないため、このような対応が必要。
-                const micLabels = ["外部マイク", "ヘッドセットマイク", "Microphone Input", "Headset Microphone"];
-                let deviceId = null;
-                let firstDeviceId = null;
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                for (const device of devices) {
-                    if (device instanceof InputDeviceInfo) {
-                        if (!firstDeviceId) {
-                            firstDeviceId = device.deviceId;
-                        }
-                        if (!deviceId && micLabels.includes(device.label)) {
-                            deviceId = device.deviceId;
-                        }
-                    }
-                }
-                if (!firstDeviceId) {
-                    View.log("音声入力デバイスが見つかりませんでした。", true);
-                    return false;
-                }
-                if (!deviceId) {
-                    deviceId = firstDeviceId;
-                }
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: deviceId, autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
                 this.micSource = this.audioContext.createMediaStreamSource(stream);
-
-                // 不具合対応用にデバイス一覧を表示
-                let output_text = "検出した入力デバイス一覧： ";
-                for (const device of devices) {
-                    if (device instanceof InputDeviceInfo) {
-                        if (device.deviceId == deviceId) {
-                            output_text += "*";
-                        }
-                        output_text += device.label + " / ";
-                    }
-                }
-                output_text += "(*)を採用 / もし、オタマトーンneo/technoを接続しているのに入力が認識されない場合、このデバイス一覧を作者に送ってください。";
-                View.log(output_text, true);
             } catch (e) {
                 this.mode = Mode.SLIDER;
                 return false;
@@ -190,7 +155,6 @@ class Duck {
         this.dummyAudioSource.loop = true;
         this.dummyAudioSource.connect(this.workletNode);
         this.dummyAudioSource.start();
-        this.userTouch();
         this.workletNode.port.postMessage({ type: 'mode', mode: Mode.SLIDER });
     }
 
