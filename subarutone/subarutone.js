@@ -259,11 +259,11 @@ class View {
     }
 
     // マウス・タッチイベントからモードを切り替える
-    static onSliderMove(duck, event) {
+    static onSliderMove(duck, pointedY) {
         if (duck.getMode() == Mode.SLIDER) {
             const frequencyBar = document.getElementById('slider');
             const rect = frequencyBar.getBoundingClientRect();
-            const mouseY = event.clientY - rect.top;
+            const mouseY = pointedY - rect.top;
             const relativePosition = mouseY / frequencyBar.clientHeight;
             const frequency = View.posToFrequency(relativePosition);
             duck.setFrequency(frequency);
@@ -308,10 +308,14 @@ class View {
         });
 
         // スライダー上のマウス・タッチ位置で周波数を設定する
-        ['mousemove', 'touchmove'].forEach(eventType => {
-            document.getElementById('slider').addEventListener(eventType, (event) => {
-                View.onSliderMove(duck, event);
-            });
+        document.getElementById('slider').addEventListener('mousemove', (event) => {
+            View.onSliderMove(duck, event.clientY);
+        });
+        document.getElementById('slider').addEventListener('touchmove', (event) => {
+            event.preventDefault(); // 画面スクロールの防止
+            if (event.targetTouches.length > 0) {
+                View.onSliderMove(duck, event.targetTouches[0].clientY);
+            }
         });
         // 指を当てたとき、話したとき、クリックしたとき、クリックを離したときなど、ユーザ操作があったら直ちにスライダーモードを起動する
         ['click', 'dblclick', 'mouseup', 'mousedown', 'touchstart'].forEach(eventType => {

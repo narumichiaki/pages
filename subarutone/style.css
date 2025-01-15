@@ -7,11 +7,13 @@ body, div, h1, h2, h3, h4, h5, h6, p {
 body {
   background-image: repeating-linear-gradient(90deg, rgba(235, 238, 175, 1) 0 10px, rgba(243, 245, 210, 1) 10px 20px);
   font-family:sans-serif;
+  overflow: hidden;
 }
 
 #container {
   margin: 0 auto;
-  width: 600px;
+  width: 100vh;
+  max-width: 800px;
   height: 100vh;
   display: flex;
   flex-direction: row;
@@ -20,18 +22,22 @@ body {
 }
 
 #left-panel {
-  width: 120px;
+  width: 50%;
+  min-width: 80px;
+  max-width: 160px;
   align-items: center;
 }
 #right-panel {
-  width: 480px;
+  width: 100%;
+  max-width: calc(800px - 120px);
   justify-content: center;
 }
 
 
 #slider-container {
+  margin: 0 auto;
   width: 40px;
-  height: 640px;
+  height: 90vh;
   border-radius: 28px;
   border: 8px solid #077186;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
@@ -40,7 +46,7 @@ body {
 #slider {
   position: relative;
   width: 40px;
-  height: 640px;
+  height: 90vh;
   border-radius: 20px;
   background-image: linear-gradient(to bottom,
     #eaeaea 0% 1.19%, 
@@ -99,7 +105,7 @@ body {
   top: 0;
   left: 0;
   width: 40px;
-  height: 640px;
+  height: 90vh;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
   text-align: center;
