@@ -56,7 +56,7 @@ class Duck {
     }
 
     resume() {
-        this.audioContext.resume();
+        this.audioContext.resume().then(() => play());
     }
     // ユーザが操作したときに、AudioContextを再開する
     userTouch() {
@@ -175,6 +175,7 @@ class Duck {
         this.dummyAudioSource.loop = true;
         this.dummyAudioSource.connect(this.workletNode);
         this.dummyAudioSource.start();
+        this.resume();
         this.workletNode.port.postMessage({ type: 'mode', mode: Mode.SLIDER });
     }
 
