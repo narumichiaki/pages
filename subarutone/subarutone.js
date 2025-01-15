@@ -55,9 +55,13 @@ class Duck {
         });
     }
 
+    resume() {
+        this.audioContext.resume();
+    }
+    // ユーザが操作したときに、AudioContextを再開する
     userTouch() {
         if (!this.isUserTouched && this.audioContext) {
-            this.audioContext.resume();
+            this.resume();
             this.isUserTouched = true;
         }
     }
@@ -97,8 +101,6 @@ class Duck {
         if (!this.isEngineReady) {
             return false;
         }
-        // ユーザが操作しないとAudioEngineは動かないので、触る
-        this.userTouch();
         // 設定済みの場合は何もしない
         if (this.mode == Mode.OTAMATONE) {
             return false;
@@ -110,7 +112,7 @@ class Duck {
                 // まず、任意のマイクを接続し、ユーザからの包括的なマイク使用許可を取得する (使用許可がないとiOSではenumerateDevices()がまともな答えを返さない)
                 let stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
 
-                // マイクの一覧を取得し、その中からオタマトーンの可能性が高いマイクを選ぶ
+                // マイクの一覧を取得し、その中からオタマトーンである可能性が高いマイクを選ぶ
                 const micCandidateLabels = ["外部マイク", "ヘッドセットマイク", "Microphone Input", "Headset Microphone"];
                 let micFound = null;
                 let micDevices = [];
@@ -157,8 +159,6 @@ class Duck {
         if (!this.isEngineReady) {
             return;
         }
-        // ユーザが操作しないとAudioEngineは動かないので、触る
-        this.userTouch();
         // 設定済みの場合は何もしない
         if (this.mode == Mode.SLIDER) {
             return;
@@ -362,6 +362,12 @@ class View {
         // スライダーのマウスが外れたときに周波数を0にする
         document.getElementById('slider').addEventListener('mouseout', () => {
             View.resetFrequency(duck);
+        });
+        window.addEventListener("visibilitychange", () => {
+            if (document.visibilityState !== "hidden") {
+                return;
+            }
+            duck.resume();
         });
         // ブラウザが閉じられたときにメモリを解放
         window.addEventListener('beforeunload', () => {
