@@ -107,13 +107,24 @@ class Duck {
         // マイク(オタマトーン)の接続。初回の場合はユーザの接続許可が必要
         if (!this.micSource) {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false } }); // 入力をそのまま受け取るために、余計な処理をしないように設定
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false }); // 入力をそのまま受け取るために、余計な処理をしないように設定
                 this.micSource = this.audioContext.createMediaStreamSource(stream);
+                // デバッグ
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                let output_text = "";
+                for (const device of devices) {
+                    output_text += device.label + "<br />";
+                }
+                View.log(output_text, true);
             } catch (e) {
                 this.mode = Mode.SLIDER;
                 return false;
             }
         }
+
+        // デバッグ
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        console.log(devices);
         // モードの切り替え
         this.mode = Mode.OTAMATONE;
         // ダミー音源の切り離し

@@ -561,7 +561,8 @@ function findWasmBinary() {
     return f;
   }
   // Use bundler-friendly `new URL(..., import.meta.url)` pattern; works in browsers too.
-  return new URL('AudioEngine.wasm', import.meta.url).href;
+  const scriptDirectory = import.meta.url.substring(0, import.meta.url.lastIndexOf('/') + 1);
+  return scriptDirectory + 'AudioEngine.wasm';
 }
 
 var wasmBinaryFile;
