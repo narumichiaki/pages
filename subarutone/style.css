@@ -1,4 +1,4 @@
-body, div, h1, h2, h3, h4, h5, h6, p {
+body, div, h1, h2, h3, h4, h5, h6, p, label {
   margin: 0;
   border: 0;
   padding: 0;
@@ -12,8 +12,9 @@ body {
 
 #container {
   margin: 0 auto;
-  width: 100vh;
-  max-width: 800px;
+  padding: 0 10px;
+  min-width: 300px;
+  max-width: 640px;
   height: 100vh;
   display: flex;
   flex-direction: row;
@@ -22,14 +23,16 @@ body {
 }
 
 #left-panel {
-  width: 50%;
-  min-width: 80px;
-  max-width: 160px;
+  margin-right: 10px;
+  width: calc(20% - 10px);
+  min-width: 60px;
+  max-width: 120px;
   align-items: center;
 }
 #right-panel {
-  width: 100%;
-  max-width: calc(800px - 120px);
+  width: 80%;
+  min-width: calc(300px - 60px);
+  max-width: calc(640px - 120px);
   justify-content: center;
 }
 
