@@ -1,6 +1,6 @@
 // オーディオプロセッサ
-const audioEngine = "./AudioEngine.wasm";
-const heapAudioProcessor = "./heap_audio_processor.js";
+const audioEngine = "AudioEngine.wasm";
+const heapAudioProcessor = "heap_audio_processor.js";
 
 // 操作モード
 const Mode = {
@@ -313,16 +313,17 @@ class View {
         });
         document.getElementById('slider').addEventListener('touchstart', (event) => {
             View.onUserTouch(duck);
+            event.preventDefault();
             if (event.changedTouches.length > 0) {
                 View.onSliderMove(duck, event.changedTouches[0].clientY);
             }
-        });
+        }, { passive: false });
         document.getElementById('slider').addEventListener('touchmove', (event) => {
             event.preventDefault(); // 画面スクロールの防止
             if (event.changedTouches.length > 0) {
                 View.onSliderMove(duck, event.changedTouches[0].clientY);
             }
-        });
+        }, { passive: false });
         // 指を当てたとき、話したとき、クリックしたとき、クリックを離したときなど、ユーザ操作があったら直ちにスライダーモードを起動する
         ['click', 'dblclick', 'mouseup', 'mousedown'].forEach(eventType => {
             document.getElementById('slider').addEventListener(eventType, () => {
