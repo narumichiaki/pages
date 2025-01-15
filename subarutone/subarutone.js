@@ -107,7 +107,30 @@ class Duck {
         // マイク(オタマトーン)の接続。初回の場合はユーザの接続許可が必要
         if (!this.micSource) {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+                // まず、任意のマイクを接続し、ユーザからの包括的なマイク使用許可を取得する (使用許可がないとiOSではenumerateDevices()がまともな答えを返さない)
+                let stream = await navigator.mediaDevices.getUserMedia({ audio: { autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+
+                // マイクの一覧を取得し、その中からオタマトーンの可能性が高いマイクを選ぶ
+                const micCandidateLabels = ["外部マイク", "ヘッドセットマイク", "Microphone Input", "Headset Microphone"];
+                let micFound = null;
+                let micDevices = [];
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                for (const device of devices) {
+                    if (device.kind == "audioinput") {
+                        micDevices.push(device.label);
+                        if (!micFound && micCandidateLabels.includes(device.label)) {
+                            // オタマトーンの可能性が高いマイクを接続する
+                            stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: device.deviceId, autoGainControl: false, echoCancellation: false, noiseSuppression: false }, video: false });
+                            micFound = device.label;
+                        }
+                    }
+                }
+                if (micDevices.length == 0) {
+                    View.log("音声入力デバイスが見つかりません。", true);
+                    return false;
+                }
+                // ログ出力
+                View.log("検知できた音声入力デバイス[" + micDevices.join(", ") + "]から\"" + (micFound ? micFound : micDevices[0]) + "\"を採用。オタマトーンを接続しているのに使用できない場合、このログを作者に教えてください。", true);
                 this.micSource = this.audioContext.createMediaStreamSource(stream);
             } catch (e) {
                 this.mode = Mode.SLIDER;
@@ -115,9 +138,6 @@ class Duck {
             }
         }
 
-        // デバッグ
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        console.log(devices);
         // モードの切り替え
         this.mode = Mode.OTAMATONE;
         // ダミー音源の切り離し
