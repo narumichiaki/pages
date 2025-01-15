@@ -16,6 +16,7 @@ body {
   min-width: 300px;
   max-width: 640px;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -41,6 +42,7 @@ body {
   margin: 0 auto;
   width: 40px;
   height: 90vh;
+  height: 90dvh;
   border-radius: 28px;
   border: 8px solid #077186;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
@@ -50,6 +52,7 @@ body {
   position: relative;
   width: 40px;
   height: 90vh;
+  height: 90dvh;
   border-radius: 20px;
   background-image: linear-gradient(to bottom,
     #eaeaea 0% 1.19%, 
@@ -109,6 +112,7 @@ body {
   left: 0;
   width: 40px;
   height: 90vh;
+  height: 90dvh;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
   text-align: center;

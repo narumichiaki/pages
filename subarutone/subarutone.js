@@ -311,14 +311,20 @@ class View {
         document.getElementById('slider').addEventListener('mousemove', (event) => {
             View.onSliderMove(duck, event.clientY);
         });
+        document.getElementById('slider').addEventListener('touchstart', (event) => {
+            View.onUserTouch(duck);
+            if (event.changedTouches.length > 0) {
+                View.onSliderMove(duck, event.changedTouches[0].clientY);
+            }
+        });
         document.getElementById('slider').addEventListener('touchmove', (event) => {
             event.preventDefault(); // 画面スクロールの防止
-            if (event.targetTouches.length > 0) {
-                View.onSliderMove(duck, event.targetTouches[0].clientY);
+            if (event.changedTouches.length > 0) {
+                View.onSliderMove(duck, event.changedTouches[0].clientY);
             }
         });
         // 指を当てたとき、話したとき、クリックしたとき、クリックを離したときなど、ユーザ操作があったら直ちにスライダーモードを起動する
-        ['click', 'dblclick', 'mouseup', 'mousedown', 'touchstart'].forEach(eventType => {
+        ['click', 'dblclick', 'mouseup', 'mousedown'].forEach(eventType => {
             document.getElementById('slider').addEventListener(eventType, () => {
                 View.onUserTouch(duck);
             });
