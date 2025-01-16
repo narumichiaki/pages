@@ -226,13 +226,13 @@ class Duck {
 
 // 大空スバル
 class Subaru extends Duck {
-    // スバルのパラメータを入れたアヒルを生成
+    // スバルの皮をかぶったアヒルを生成
     constructor() {
         const voiceId = 0;
         super(voiceId);
     }
 
-    // 起こす（コンストラクタを直接使ってはいけない理由は特にない）
+    // あじめる（コンストラクタを直接使ってはいけない理由は特にない）
     static wakeUp() {
         return new Subaru();
     }
@@ -408,7 +408,7 @@ class View {
 
     // オーバーレイを非表示にする
     static getReadyOverlay() {
-        document.getElementById('overlay').textContent = '起こす';
+        document.getElementById('overlay').textContent = 'あじめる';
         document.getElementById('easy-mode-container').classList.remove('isnotready');
         document.getElementById('easy-mode').classList.remove('isnotready');
         document.getElementById('otamatone-mode-container').classList.remove('isnotready');
