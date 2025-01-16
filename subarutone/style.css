@@ -47,7 +47,6 @@ a:hover {
   justify-content: center;
 }
 
-
 #slider-container {
   margin: 0 auto;
   width: 40px;
@@ -66,9 +65,10 @@ a:hover {
   height: 90dvh;
   border-radius: 20px;
   background-image: linear-gradient(to bottom,
-    #eaeaea 0% 1.19%, 
-    #d0dc2c 1.19% 3.83%, 
-    #eaeaea 3.83% 6.47%, 
+    #d0dc2c 0% 1.19%, 
+    #eaeaea 1.19% 3.83%, 
+    #d0dc2c 3.83% calc(3.83% + 1px), 
+    #eaeaea calc(3.83% + 1px) 6.47%, 
     #d0dc2c 6.47% 9.11%, 
     #eaeaea 9.11% 11.75%, 
     #d0dc2c 11.75% 14.39%, 
@@ -76,11 +76,12 @@ a:hover {
     #d0dc2c 17.03% 19.67%, 
     #eaeaea 19.67% 22.31%, 
     #4abdcc 22.31% 24.95%, 
-    #eaeaea 24.95% 27.59%, 
-    #d0dc2c 27.59% 30.23%, 
-    #eaeaea 30.23% 32.87%, 
-    #d0dc2c 32.87% 35.51%, 
-    #eaeaea 35.51% 38.15%, 
+    #d0dc2c 24.95% 27.59%, 
+    #eaeaea 27.59% 30.23%, 
+    #d0dc2c 30.23% 32.87%, 
+    #eaeaea 32.87% 35.51%,
+    #d0dc2c 35.51% calc(35.51% + 1px),
+    #eaeaea calc(35.51% + 1px) 38.15%, 
     #d0dc2c 38.15% 40.79%, 
     #eaeaea 40.79% 43.43%, 
     #d0dc2c 43.43% 46.07%, 
@@ -88,11 +89,12 @@ a:hover {
     #d0dc2c 48.71% 51.35%, 
     #eaeaea 51.35% 53.99%, 
     #4abdcc 53.99% 56.63%, 
-    #eaeaea 56.63% 59.27%, 
-    #d0dc2c 59.27% 61.91%, 
-    #eaeaea 61.91% 64.55%, 
-    #d0dc2c 64.55% 67.19%, 
-    #eaeaea 67.19% 69.83%, 
+    #d0dc2c 56.63% 59.27%, 
+    #eaeaea 59.27% 61.91%, 
+    #d0dc2c 61.91% 64.55%, 
+    #eaeaea 64.55% 67.19%, 
+    #d0dc2c 67.19% calc(67.19% + 1px), 
+    #eaeaea calc(67.19% + 1px) 69.83%, 
     #d0dc2c 69.83% 72.47%, 
     #eaeaea 72.47% 75.11%, 
     #d0dc2c 75.11% 77.75%, 
@@ -100,11 +102,12 @@ a:hover {
     #d0dc2c 80.39% 83.03%, 
     #eaeaea 83.03% 85.67%, 
     #4abdcc 85.67% 88.31%, 
-    #eaeaea 88.31% 90.95%, 
-    #d0dc2c 90.95% 93.59%, 
-    #eaeaea 93.59% 96.23%, 
-    #d0dc2c 96.23% 98.87%, 
-    #eaeaea 98.87% 100%
+    #d0dc2c 88.31% 90.95%, 
+    #eaeaea 90.95% 93.59%, 
+    #d0dc2c 93.59% 96.23%, 
+    #eaeaea 96.23% 98.87%,
+    #d0dc2c 98.87% calc(98.87% + 1px),
+    #eaeaea calc(98.87% + 1px) 100%
   );
   user-select: none;
 }
