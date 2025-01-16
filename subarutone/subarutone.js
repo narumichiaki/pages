@@ -335,8 +335,10 @@ class View {
         });
 
         // スライダー上のマウス・タッチ位置で周波数を設定する
-        document.getElementById('slider').addEventListener('mousemove', (event) => {
-            View.onSliderMove(duck, event.clientY);
+        ['mouseover', 'mousemove'].forEach(eventType => {
+            document.getElementById('slider').addEventListener(eventType, (event) => {
+                View.onSliderMove(duck, event.clientY);
+            });
         });
         document.getElementById('slider').addEventListener('touchstart', (event) => {
             View.onUserTouch(duck);
@@ -362,8 +364,12 @@ class View {
             View.onUserTouch(duck);
             View.resetFrequency(duck);
         });
-        // スライダーのマウスが外れたときに周波数を0にする
-        document.getElementById('slider').addEventListener('mouseout', () => {
+        // スライダーのマウスが外れたときに周波数を0にする。ただし子要素への移動は無視する。
+        document.getElementById('slider').addEventListener('mouseout', (event) => {
+            const related = event.relatedTarget;
+            if (related && document.getElementById('slider').contains(related)) {
+                return;
+            }
             View.resetFrequency(duck);
         });
         window.addEventListener("visibilitychange", () => {
