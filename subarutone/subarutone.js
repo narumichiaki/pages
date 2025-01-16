@@ -14,6 +14,7 @@ class Duck {
     isUserTouched = false;
     isEasyMode = false;
     workletNode = null;
+    gainNode = null;
     audioContext = null;
     dummyAudioSource = null;
     micSource = null;
@@ -40,8 +41,11 @@ class Duck {
         // 音声処理を行うworkletNodeをロード
         await this.audioContext.audioWorklet.addModule(heapAudioProcessor);
         this.workletNode = new AudioWorkletNode(this.audioContext, 'duck');
+        // 音量調節 (小さいので15倍にゲイン)
+        this.gainNode = this.audioContext.createGain();
         // 出力先に接続
-        this.workletNode.connect(this.audioContext.destination);
+        this.workletNode.connect(this.gainNode);
+        this.gainNode.connect(this.audioContext.destination);
 
         // イベントリスナーをセット
         this.setEventListeners();
@@ -147,6 +151,10 @@ class Duck {
             this.dummyAudioSource.disconnect(this.workletNode);
             this.dummyAudioSource = null;
         }
+
+        // ゲインを調整
+        this.gainNode.gain.setValueAtTime(15.0, this.audioContext.currentTime);
+
         this.micSource.connect(this.workletNode);
         this.workletNode.port.postMessage({ type: 'mode', mode: Mode.OTAMATONE });
 
@@ -171,6 +179,10 @@ class Duck {
             this.micStream = null;
             this.micSource = null;
         }
+
+        // ゲインを増やす
+        this.gainNode.gain.setValueAtTime(15.0, this.audioContext.currentTime);
+
         // ダミー音源は毎回つくる
         this.dummyAudioSource = this.audioContext.createBufferSource();
         this.dummyAudioSource.buffer = this.audioContext.createBuffer(1, this.audioContext.sampleRate * 1, this.audioContext.sampleRate);
@@ -178,6 +190,7 @@ class Duck {
         this.dummyAudioSource.connect(this.workletNode);
         this.dummyAudioSource.start();
         this.resume();
+
         this.workletNode.port.postMessage({ type: 'mode', mode: Mode.SLIDER });
     }
 
