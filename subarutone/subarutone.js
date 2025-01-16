@@ -61,7 +61,9 @@ class Duck {
     }
 
     resume() {
-        this.audioContext.resume().then(() => play());
+        if (this.audioContext && (this.audioContext.state == 'suspended' || this.audioContext.state == 'interrupted')) {
+            this.audioContext.resume();
+        }
     }
     // ユーザが操作したときに、AudioContextを再開する
     userTouch() {
@@ -360,6 +362,10 @@ class View {
                 View.onSliderMove(duck, event.changedTouches[0].clientY);
             }
         }, { passive: false });
+        document.getElementById('overlay').addEventListener('touchstart', (event) => {
+            View.onUserTouch(duck);
+            event.preventDefault();
+        }, { passive: false });
         document.getElementById('slider').addEventListener('touchmove', (event) => {
             event.preventDefault(); // 画面スクロールの防止
             if (event.changedTouches.length > 0) {
@@ -371,6 +377,9 @@ class View {
             document.getElementById('slider').addEventListener(eventType, () => {
                 View.onUserTouch(duck);
             });
+            document.getElementById('overlay').addEventListener(eventType, () => {
+                View.onUserTouch(duck);
+            }, { once: true});
         });
         // 指を離したときに周波数を0にする
         document.getElementById('slider').addEventListener('touchend', () => {
