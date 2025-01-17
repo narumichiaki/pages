@@ -43,21 +43,21 @@
         </div>
     </div>
     <script>
-        // スバルを起こす
+        // あじめる
         duck = Subaru.wakeUp();
 
-        // HTMLがすべてロードされ、スバルの準備が完了したらユーザが使えるようにする。
+        // HTMLがすべてロードされ、スバルの準備が完了したら、ユーザが使えるようにする。
         let isDomLoaded = false;
         let isSubaruReady = false;
         function prepare() {
             if (isDomLoaded && isSubaruReady) {
-                View.setEventListeners(duck);
-                View.getReadyOverlay();
+                View.init(duck);
             }
         }
         // HTMLのロード完了を監視
         document.addEventListener('DOMContentLoaded', () => {
             isDomLoaded = true;
+            document.getElementById('right-panel').scrollBy(0, -10000); // CSSのalign-content: centerはoverflow時に縦軸の中央を初期位置にしてしまうためリセットする
             prepare();
         });
         // スバルの準備完了を監視

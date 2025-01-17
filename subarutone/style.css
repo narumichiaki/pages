@@ -44,7 +44,6 @@ a:hover {
   overflow-y: auto;
   min-width: calc(300px - 60px);
   max-width: calc(640px - 120px);
-  justify-content: center;
 }
 
 #slider-container {
@@ -141,6 +140,9 @@ h1 {
   font-size: 1.5em;
 }
 
+#frequency {
+  padding-left: 1em;
+}
 #frequency::before {
   content: '周波数： ';
 }
