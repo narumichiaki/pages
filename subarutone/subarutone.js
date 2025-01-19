@@ -375,20 +375,20 @@ class View {
         });
 
         // オーバーレイをタッチしたら、そのユーザ操作を起点としてduckを再生状態にする
-        ['touchstart', 'touchend'].forEach(eventType => {
-            View.overlayElement.addEventListener(eventType, (event) => {
+        View.overlayElement.addEventListener('touchstart', (event) => {
+            View.onUserTouch();
+            event.preventDefault();
+        }, { passive: false });
+        // 指を当てたとき、話したとき、クリックしたとき、クリックを離したときなど、ユーザ操作があったら直ちにスライダーモードを起動する
+        ['click', 'dblclick', 'mouseup', 'mousedown'].forEach(eventType => {
+            View.sliderElement.addEventListener(eventType, (event) => {
                 View.onUserTouch();
                 event.preventDefault();
             }, { passive: false });
-        });
-        // 指を当てたとき、話したとき、クリックしたとき、クリックを離したときなど、ユーザ操作があったら直ちにスライダーモードを起動する
-        ['click', 'dblclick', 'mouseup', 'mousedown'].forEach(eventType => {
-            View.sliderElement.addEventListener(eventType, () => {
+            View.overlayElement.addEventListener(eventType, (event) => {
                 View.onUserTouch();
-            });
-            View.overlayElement.addEventListener(eventType, () => {
-                View.onUserTouch();
-            }, { once: true});
+                event.preventDefault();
+            }, { once: true, passive: false });
         });
         // スライダー上のマウス・タッチ位置で周波数を設定する
         ['mouseover', 'mousemove'].forEach(eventType => {
@@ -411,10 +411,12 @@ class View {
             }
         }, { passive: false });
         // 指を離したときに周波数を0にする
-        View.sliderElement.addEventListener('touchend', (event) => {
-            View.onUserTouch();
-            event.preventDefault();
-            View.resetFrequency();
+        ['touchend', 'touchcancel'].forEach(eventType => {
+            View.sliderElement.addEventListener(eventType, (event) => {
+                View.onUserTouch();
+                event.preventDefault();
+                View.resetFrequency();
+            });
         });
         // スライダーのマウスが外れたときに周波数を0にする。ただし子要素への移動は無視する (無視しないとWindows環境では再生が安定しない)。
         View.sliderElement.addEventListener('mouseout', (event) => {
